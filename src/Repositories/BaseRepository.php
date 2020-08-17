@@ -28,6 +28,10 @@ abstract class BaseRepository
      * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
      */
     protected $wallet_password;
+    /**
+     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    protected $gab_limit;
 
     /**
      * Create a new repository instance.
@@ -42,6 +46,55 @@ abstract class BaseRepository
         $this->local_server = config('blockchain-monitor.local_blockchain_server');
         $this->wallet_id = config('blockchain-monitor.wallet_id');
         $this->wallet_password = config('blockchain-monitor.wallet_password');
+        $this->gab_limit = config('blockchain-monitor.gap_limit');
+    }
+
+    /**
+     * @param string $key
+     * @param $value
+     * @param bool $withTrashed
+     * @return bool
+     */
+    public function exists(string $key, $value, $withTrashed = false)
+    {
+        try {
+            $query = $this->model->where($key, $value);
+            if ($withTrashed)
+                $query = $query->withTrashed();
+
+            return $query->exists();
+        } catch (\Illuminate\Database\QueryException $exc) {
+            Log::error($exc->getMessage(), $exc->getTrace());
+            return false;
+        }
+    }
+
+    /**
+     * @param string $attr_name
+     * @param $attr_value
+     * @param array $relations
+     * @param bool $withTrashed
+     * @param array $selects
+     * @return mixed|null
+     */
+    public function getByAttribute(string $attr_name, $attr_value, $relations = [], $withTrashed = false, $selects = [])
+    {
+        try {
+            $query = $this->model;
+            if (count($relations) > 0)
+                $query = $query->with($relations);
+
+            if (count($selects) > 0)
+                $query->select($selects);
+
+            if ($withTrashed)
+                $query = $query->withTrashed();
+
+            return $query->where($attr_name, $attr_value)->first();
+        } catch (\Illuminate\Database\QueryException $exc) {
+            Log::error($exc->getMessage(), $exc->getTrace());
+            return null;
+        }
     }
 
     /**

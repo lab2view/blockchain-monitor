@@ -2,6 +2,7 @@
 
 namespace Lab2view\BlockchainMonitor;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class BlockchainServiceProvider extends ServiceProvider
@@ -19,6 +20,22 @@ class BlockchainServiceProvider extends ServiceProvider
                 \Lab2view\BlockchainMonitor\Console\MonitorCommand::class,
             ]);
         }
+        $this->registerRoutes();
+    }
+
+    protected function registerRoutes()
+    {
+        Route::group($this->routeConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__.'../routes/api.php');
+        });
+    }
+
+    protected function routeConfiguration()
+    {
+        return [
+            'prefix' => config('blockchain-monitor.prefix'),
+            'middleware' => config('blockchain-monitor.middleware'),
+        ];
     }
 
     /**
