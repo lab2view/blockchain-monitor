@@ -7,8 +7,6 @@ use Lab2view\BlockchainMonitor\Xpub;
 
 class XpubRepository extends BaseRepository
 {
-    public static $GAB_LIMIT = (int)config('blockchain-monitor.gap_limit');
-
     public function __construct(Xpub $xpub)
     {
         parent::__construct($xpub);

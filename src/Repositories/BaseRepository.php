@@ -191,4 +191,11 @@ abstract class BaseRepository
             return false;
         }
     }
+
+    /**
+     */
+    public function getGabLimit()
+    {
+        return is_null($this->gab_limit) ? 20 : (int)$this->gab_limit;
+    }
 }

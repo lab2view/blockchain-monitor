@@ -59,7 +59,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
             if ($address)
                 return $this->invoiceRepository->makeInvoice($address, $btc_amount);
             else {
-                if ($xpub->gab >= XpubRepository::$GAB_LIMIT)
+                if ($xpub->gab >= $this->xpubRepository->getGabLimit())
                     throw QueryException::xpubAllGabLimited();
                 else {
                     $address = $this->addressRepository->generate($xpub);
