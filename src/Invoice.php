@@ -79,6 +79,6 @@ class Invoice extends Model
 
     public function address()
     {
-        return $this->belongsTo(\Lab2view\BlockchainMonitor\Address::class);
+        return $this->belongsTo(\Lab2view\BlockchainMonitor\Address::class, 'address_id');
     }
 }

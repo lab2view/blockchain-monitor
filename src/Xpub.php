@@ -35,6 +35,6 @@ class Xpub extends Model
 
     public function addresses()
     {
-        return $this->hasMany(\Lab2view\BlockchainMonitor\Address::class);
+        return $this->hasMany(\Lab2view\BlockchainMonitor\Address::class, 'address_id');
     }
 }

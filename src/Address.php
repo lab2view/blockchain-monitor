@@ -45,6 +45,6 @@ class Address extends Model
 
     public function xpub()
     {
-        return $this->belongsTo(\Lab2view\BlockchainMonitor\Xpub::class);
+        return $this->belongsTo(\Lab2view\BlockchainMonitor\Xpub::class, 'xpub_id');
     }
 }
