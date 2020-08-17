@@ -25,6 +25,8 @@ class Address extends Model
 {
     use \Illuminate\Database\Eloquent\SoftDeletes;
 
+    protected $table = 'blockchain_addresses';
+
     protected $casts = [
         'xpub_id' => 'int',
         'index' => 'int',

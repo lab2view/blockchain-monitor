@@ -22,6 +22,8 @@ class Xpub extends Model
 {
     use \Illuminate\Database\Eloquent\SoftDeletes;
 
+    protected $table = 'blockchain_xpubs';
+
     protected $casts = [
         'gab' => 'int'
     ];

@@ -13,7 +13,7 @@ class CreateBlockchainTable extends Migration
      */
     public function up()
     {
-        Schema::create('xpubs', function (Blueprint $table) {
+        Schema::create('blockchain_xpubs', function (Blueprint $table) {
             $table->increments('id');
             $table->string("label", 111)->unique();
             $table->unsignedInteger('gab')->default(0);
@@ -21,7 +21,7 @@ class CreateBlockchainTable extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('blockchain_addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('xpub_id');
             $table->string('label', 34)->index();
@@ -36,7 +36,7 @@ class CreateBlockchainTable extends Migration
             $table->foreign('xpub_id')->references('id')->on('xpubs');
         });
 
-        Schema::create('invoices', function (Blueprint $table) {
+        Schema::create('blockchain_invoices', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedInteger('address_id');
             $table->string('amount');
@@ -56,8 +56,8 @@ class CreateBlockchainTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoices');
-        Schema::dropIfExists('addresses');
-        Schema::dropIfExists('xpubs');
+        Schema::dropIfExists('blockchain_invoices');
+        Schema::dropIfExists('blockchain_addresses');
+        Schema::dropIfExists('blockchain_xpubs');
     }
 }

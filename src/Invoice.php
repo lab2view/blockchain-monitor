@@ -21,6 +21,8 @@ use Illuminate\Support\Str;
  */
 class Invoice extends Model
 {
+    protected $table = 'blockchain_invoices';
+
     protected $casts = [
         'confirmations' => 'int',
         'address_id' => 'int'
