@@ -1,0 +1,37 @@
+{
+    "name": "lab2view/blockchain-monitor",
+    "description": "Manage Blockchain.info Wallet with API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lab2View SARL",
+            "email": "lab2view@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lab2view\\BlockchainMonitor\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lab2view\\BlockchainMonitor\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lab2view\\BlockchainMonitor\\BlockchainServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/canvas": "^6.0@dev",
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.4@dev"
+    }
+}
