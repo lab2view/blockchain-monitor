@@ -10,7 +10,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "blockchain/blockchain": "^1.4"
     },
     "autoload": {
         "psr-4": {

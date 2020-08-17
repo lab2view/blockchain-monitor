@@ -18,8 +18,7 @@ console:
   namespace: Lab2view\BlockchainMonitor\Console
 
 model:
-  path: models
-  namespace: Lab2view\BlockchainMonitor\Models
+  namespace: Lab2view\BlockchainMonitor
 
 provider:
   namespace: Lab2view\BlockchainMonitor
