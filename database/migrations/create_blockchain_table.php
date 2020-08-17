@@ -56,8 +56,8 @@ class CreateBlockchainTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('xpubs');
-        Schema::dropIfExists('addresses');
         Schema::dropIfExists('invoices');
+        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('xpubs');
     }
 }
