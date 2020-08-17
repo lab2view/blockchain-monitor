@@ -13,7 +13,12 @@ class BlockchainServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__.'/../config/blockchain-monitor.php', 'blockchain-monitor');
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Lab2view\BlockchainMonitor\Console\MonitorCommand::class,
+            ]);
+        }
     }
 
     /**
@@ -26,10 +31,14 @@ class BlockchainServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             if (!class_exists('CreateBlockchainTable')) {
                 $this->publishes([
-                    __DIR__ . '/../database/migrations/create_blockchain_table.php.stub'
+                    __DIR__ . '/../database/migrations/create_blockchain_table.php'
                     => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_blockchain_table.php'),
                 ], 'migrations');
             }
+
+            $this->publishes([
+                __DIR__.'/../config/blockchain-monitor.php' => config_path('blockchain-monitor.php'),
+            ], 'config');
         }
     }
 }

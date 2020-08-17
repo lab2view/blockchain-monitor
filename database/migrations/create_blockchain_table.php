@@ -35,6 +35,18 @@ class CreateBlockchainTable extends Migration
 
             $table->foreign('xpub_id')->references('id')->on('xpubs');
         });
+
+        Schema::create('invoices', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->unsignedInteger('address_id');
+            $table->string('amount');
+            $table->string('hash');
+            $table->unsignedInteger('confirmations')->default(0);
+            $table->string('state', 10);
+            $table->timestamps();
+
+            $table->foreign('address_id')->references('id')->on('addresses');
+        });
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab2view\BlockchainMonitor\Models;
+namespace Lab2view\BlockchainMonitor;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
  *
- * @property \Illuminate\Database\Eloquent\Collection|\Lab2view\BlockchainMonitor\Models\Address[] $addresses
+ * @property \Illuminate\Database\Eloquent\Collection|\Lab2view\BlockchainMonitor\Address[] $addresses
  *
- * @package Lab2view\BlockchainMonitor\Models
+ * @package Lab2view\BlockchainMonitor
  */
 class Xpub extends Model
 {
@@ -33,6 +33,6 @@ class Xpub extends Model
 
     public function addresses()
     {
-        return $this->hasMany(\Lab2view\BlockchainMonitor\Models\Address::class);
+        return $this->hasMany(\Lab2view\BlockchainMonitor\Address::class);
     }
 }
