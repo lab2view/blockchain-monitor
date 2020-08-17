@@ -47,4 +47,9 @@ class Address extends Model
     {
         return $this->belongsTo(\Lab2view\BlockchainMonitor\Xpub::class, 'xpub_id');
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(\Lab2view\BlockchainMonitor\Invoice::class, 'address_id');
+    }
 }

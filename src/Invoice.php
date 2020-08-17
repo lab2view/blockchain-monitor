@@ -11,7 +11,8 @@ use Illuminate\Support\Str;
  * @property string $id
  * @property int $address_id
  * @property int $confirmations
- * @property string $amount
+ * @property string $request_amount
+ * @property string $response_amount
  * @property string $hash
  * @property string $state
  * @property \Carbon\Carbon $created_at
@@ -30,10 +31,10 @@ class Invoice extends Model
 
     protected $fillable = [
         'address_id',
-        'amount',
+        'request_amount',
+        'response_amount',
         'hash',
-        'confirmations',
-        'state'
+        'confirmations'
     ];
 
     /**
@@ -80,5 +81,9 @@ class Invoice extends Model
     public function address()
     {
         return $this->belongsTo(\Lab2view\BlockchainMonitor\Address::class, 'address_id');
+    }
+
+    public function getQrCodeString() {
+        return '';
     }
 }

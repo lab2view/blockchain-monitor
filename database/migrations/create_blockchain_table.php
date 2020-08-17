@@ -39,10 +39,10 @@ class CreateBlockchainTable extends Migration
         Schema::create('blockchain_invoices', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedInteger('address_id');
-            $table->string('amount');
-            $table->string('hash');
-            $table->unsignedInteger('confirmations')->default(0);
-            $table->string('state', 10);
+            $table->string('request_amount', 16);
+            $table->string('response_amount', 16)->nullable();
+            $table->string('hash')->nullable();
+            $table->unsignedInteger('confirmations')->nullable();
             $table->timestamps();
 
             $table->foreign('address_id')->references('id')->on('addresses');
