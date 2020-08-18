@@ -12,6 +12,7 @@ use Lab2view\BlockchainMonitor\Xpub;
 
 class InvoiceRepository extends BaseRepository
 {
+    const PENDING = 'PENDING';
     const DONE = 'DONE';
     const WAITING = 'WAITING';
     const READY = 'READY';
@@ -32,15 +33,15 @@ class InvoiceRepository extends BaseRepository
     public static function makeInvoice(\Lab2view\BlockchainMonitor\Address $address, string $btc_amount)
     {
         try {
-            $invoice = new Invoice();
-            $invoice->address_id = $address->id;
-            $invoice->request_amount = $btc_amount;
+            $invoice = new Invoice(['address_id' => $address->id,
+                'request_amount' => $btc_amount,
+                'state' => InvoiceRepository::PENDING]);
             $invoice->save();
 
             $address->update(['is_active' => false]);
 
             $cancelDelay = Config::get('blockchain-monitor.cancel_invoice_delay', 5);
-            dispatch(new AddressMonitorJob($invoice))->delay(Carbon::now()->addMinutes($cancelDelay));
+            AddressMonitorJob::dispatch($invoice)->delay(now()->addMinutes($cancelDelay));
 
             return new InvoiceResponse($invoice);
         } catch (\Exception $exception) {

@@ -24,7 +24,7 @@ class InvoiceResponse
     public function __construct($invoice)
     {
         $this->address = (string)$invoice->address->label;
-        $this->amount = $invoice->amount;
+        $this->amount = $invoice->request_amount;
         $this->confirmations = $invoice->confirmations;
         $this->invoice_id = $invoice->id;
     }
@@ -38,9 +38,9 @@ class InvoiceResponse
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getConfirmations(): int
+    public function getConfirmations()
     {
         return $this->confirmations;
     }
