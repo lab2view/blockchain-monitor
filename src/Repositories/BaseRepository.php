@@ -2,51 +2,15 @@
 
 namespace Lab2view\BlockchainMonitor\Repositories;
 
-use Blockchain\Blockchain;
 use Illuminate\Support\Facades\Log;
 
 abstract class BaseRepository
 {
     protected $model;
-    /**
-     * @var Blockchain
-     */
-    protected $blockchain;
-    /**
-     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    protected $api_key;
-    /**
-     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    protected $local_server;
-    /**
-     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    protected $wallet_id;
-    /**
-     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    protected $wallet_password;
-    /**
-     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    protected $gab_limit;
 
-    /**
-     * Create a new repository instance.
-     *
-     * @param $model
-     */
     public function __construct($model)
     {
         $this->model = $model;
-        $this->blockchain = new Blockchain(config('blockchain-monitor.api_key'));
-        $this->api_key = config('blockchain-monitor.api_key');
-        $this->local_server = config('blockchain-monitor.local_blockchain_server');
-        $this->wallet_id = config('blockchain-monitor.wallet_id');
-        $this->wallet_password = config('blockchain-monitor.wallet_password');
-        $this->gab_limit = config('blockchain-monitor.gap_limit');
     }
 
     /**
@@ -121,7 +85,16 @@ abstract class BaseRepository
     public function getById($id, $relations = [], $withTrashed = false, $selects = [])
     {
         try {
-            $query = $this->initiateQuery($relations, $withTrashed, $selects);
+            $query = $this->model;
+            if (count($relations) > 0)
+                $query = $query->with($relations);
+
+            if (count($selects) > 0)
+                $query->select($selects);
+
+            if ($withTrashed)
+                $query = $query->withTrashed();
+
             return $query->find($id);
         } catch (\Illuminate\Database\QueryException $exc) {
             Log::error($exc->getMessage(), $exc->getTrace());
@@ -190,12 +163,5 @@ abstract class BaseRepository
             Log::error($exc->getMessage(), $exc->getTrace());
             return false;
         }
-    }
-
-    /**
-     */
-    public function getGabLimit()
-    {
-        return is_null($this->gab_limit) ? 20 : (int)$this->gab_limit;
     }
 }

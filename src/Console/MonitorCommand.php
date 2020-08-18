@@ -65,7 +65,7 @@ class MonitorCommand extends Command
                 else {
                     if (!is_null(config('blockchain-monitor.api_key'))) {
                         try {
-                            $gab = $this->xpubRepository->getGabByXPub($value);
+                            $gab = XpubRepository::getGabByXPub($value);
                             $xpub = $this->xpubRepository->getByAttribute('label', $value, [], true);
                             if ($xpub) {
                                 if ($xpub->trashed())

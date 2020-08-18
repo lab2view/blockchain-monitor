@@ -34,7 +34,8 @@ class Invoice extends Model
         'request_amount',
         'response_amount',
         'hash',
-        'confirmations'
+        'confirmations',
+        'state'
     ];
 
     /**
@@ -81,9 +82,5 @@ class Invoice extends Model
     public function address()
     {
         return $this->belongsTo(\Lab2view\BlockchainMonitor\Address::class, 'address_id');
-    }
-
-    public function getQrCodeString() {
-        return '';
     }
 }

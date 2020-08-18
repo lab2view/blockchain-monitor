@@ -2,7 +2,7 @@
 
 namespace Lab2view\BlockchainMonitor\Repositories;
 
-use Lab2view\BlockchainMonitor\Exceptions\QueryException;
+use Lab2view\BlockchainMonitor\MonitorStatic;
 use Lab2view\BlockchainMonitor\Xpub;
 
 class XpubRepository extends BaseRepository
@@ -18,24 +18,28 @@ class XpubRepository extends BaseRepository
      * @throws \Blockchain\Exception\Error
      * @throws \Blockchain\Exception\HttpError
      */
-    public function getGabByXPub(string $xpub_value)
+    public static function getGabByXPub(string $xpub_value)
     {
-        return $this->blockchain->ReceiveV2->checkAddressGap($this->api_key, $xpub_value);
+        return MonitorStatic::getReceiveInstance()->checkAddressGap(MonitorStatic::getApiKey(), $xpub_value);
     }
 
     /**
-     * @return Xpub|null
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Xpub
      */
-    public function selectInRandomOrder()
+    public static function selectInRandomOrder()
     {
         try {
-            $query = $this->model;
-            if ($query->where('gab', '<', $this->gab_limit)->exists())
-                $query = $query->where('gab', '<', $this->gab_limit);
+            $query = Xpub::query();
+            if ($query->where('gab', '<', MonitorStatic::getGabLimit())->exists())
+                $query = $query->where('gab', '<', MonitorStatic::getGabLimit());
 
-            $query->inRandomOrder()->first();
+            return $query->inRandomOrder()->first();
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    public static function refreshGab(Xpub $xpub) {
+        $xpub->update(['gab' => XpubRepository::getGabByXPub($xpub->label)]);
     }
 }

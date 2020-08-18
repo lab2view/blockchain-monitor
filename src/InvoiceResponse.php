@@ -21,7 +21,7 @@ class InvoiceResponse
      */
     private $address;
 
-    public function __construct(Invoice $invoice)
+    public function __construct($invoice)
     {
         $this->address = (string)$invoice->address->label;
         $this->amount = $invoice->amount;
