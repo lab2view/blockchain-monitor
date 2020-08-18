@@ -12,6 +12,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
 {
     /**
      * @param string $btc_amount
+     * @return InvoiceResponse
      * @throws QueryException
      * @throws BlockchainException
      */

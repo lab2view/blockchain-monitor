@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Lab2view\BlockchainMonitor\Invoice;
 use Lab2view\BlockchainMonitor\Repositories\InvoiceRepository;
 
@@ -37,8 +38,16 @@ class AddressMonitorJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->invoice->refresh();
-        if (is_null($this->invoice->confirmations))
-            InvoiceRepository::cancelInvoice($this->invoice);
+        try {
+            $this->invoice->refresh();
+            if (is_null($this->invoice->confirmations)) {
+                Log::info('START TRAITEMENT ! ');
+                $this->invoice->address()->update(['is_active' => true]);
+
+                InvoiceRepository::cancelInvoice($this->invoice);
+            }
+        } catch (\Exception $e) {
+            Log::error('BLOCKCHAIN-MONITOR JOB ERROR ' . $e->getMessage());
+        }
     }
 }

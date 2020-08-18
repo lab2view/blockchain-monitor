@@ -28,7 +28,7 @@ class AddressRepository extends BaseRepository
             if ($query->whereNull('amount')->exists())
                 $query = $query->whereNull('amount');
 
-            return $query->orderBy('index')->first();
+            return $query->inRandomOrder()->first();
         } catch (\Exception $e) {
             return null;
         }
