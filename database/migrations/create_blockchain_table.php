@@ -33,7 +33,7 @@ class CreateBlockchainTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('xpub_id')->references('id')->on('xpubs');
+            $table->foreign('xpub_id')->references('id')->on('blockchain_xpubs');
         });
 
         Schema::create('blockchain_invoices', function (Blueprint $table) {
@@ -46,7 +46,7 @@ class CreateBlockchainTable extends Migration
             $table->unsignedInteger('confirmations')->nullable();
             $table->timestamps();
 
-            $table->foreign('address_id')->references('id')->on('addresses');
+            $table->foreign('address_id')->references('id')->on('blockchain_addresses');
         });
     }
 
