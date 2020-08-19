@@ -81,25 +81,25 @@ class InvoiceCallback
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getReceiveAmount(): string
+    public function getReceiveAmount()
     {
         return $this->receive_amount;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getHash(): string
+    public function getHash()
     {
         return $this->hash;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getConfirmations(): int
+    public function getConfirmations()
     {
         return $this->confirmations;
     }
