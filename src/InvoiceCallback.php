@@ -75,7 +75,7 @@ class InvoiceCallback
     /**
      * @return string
      */
-    public function getRequestAmount(): string
+    public function getRequestAmount()
     {
         return $this->request_amount;
     }
