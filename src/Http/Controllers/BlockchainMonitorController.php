@@ -64,12 +64,13 @@ class BlockchainMonitorController extends Controller
 
             $this->invoiceRepository->update($invoice->id, $data);
 
-            if ($invoice->address->is_busy && $confirmations == 0)
+            if ($invoice->address->is_busy && $confirmations == 0) {
                 $this->addressRepository->update($invoice->address->id, [
                     'is_busy' => false,
                     'amount' => is_null($invoice->address->amount) ? $response_amount
                         : bcadd($invoice->address->amount, $response_amount)
                 ]);
+            }
 
             if (!AddressRepository::verifyCallbackKey($key, $reference))
                 event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh(), false)));
