@@ -37,4 +37,19 @@ class BlockchainMonitor implements BlockchainMonitorInterface
         } else
             throw QueryException::xpubNotFound();
     }
+
+    /**
+     * @param $invoice_id
+     * @return InvoiceCallback
+     * @throws QueryException
+     */
+    public function getInvoice($invoice_id) {
+        try {
+            $invoice = InvoiceRepository::getInvoiceCallbackById($invoice_id);
+            if ($invoice)
+                return new InvoiceCallback($invoice);
+        } catch (QueryException $e) {
+            throw QueryException::queryException($e->getMessage());
+        }
+    }
 }

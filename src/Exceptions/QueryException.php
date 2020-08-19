@@ -22,4 +22,8 @@ class QueryException extends Exception
     public static function storeInvoiceError() {
         return new static('There was an error during the saving of the invoice. More details in laravel log file !' );
     }
+
+    public static function queryException($message) {
+        return new static($message);
+    }
 }

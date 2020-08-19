@@ -74,6 +74,20 @@ class InvoiceRepository extends BaseRepository
     }
 
     /**
+     * @param $invoice_id
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|Invoice|object|null
+     * @throws QueryException
+     */
+    public static function getInvoiceCallbackById($invoice_id)
+    {
+        try {
+           return Invoice::query()->where('id', $invoice_id)->first();
+        } catch (\Exception $exception) {
+            throw QueryException::queryException($exception->getMessage());
+        }
+    }
+
+    /**
      * @param $reference
      * @param $transaction_hash
      * @return Invoice|null

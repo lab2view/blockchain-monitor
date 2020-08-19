@@ -112,4 +112,12 @@ class InvoiceCallback
         return $this->custom_data;
     }
 
+    /**
+     * @return bool
+     */
+    public function isVerify(): bool
+    {
+        return $this->verify;
+    }
+
 }
