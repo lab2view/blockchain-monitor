@@ -5,11 +5,11 @@ namespace Lab2view\BlockchainMonitor;
 interface BlockchainMonitorInterface {
 
     /**
-     * @param string $amount
+     * @param $amount
      * @param string|null $custom_data
      * @return InvoiceResponse
      */
-    public function generateAddress(string $amount, string $custom_data = null);
+    public function generateAddress($amount, string $custom_data = null);
 
     /**
      * @param $invoice_id

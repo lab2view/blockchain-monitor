@@ -32,7 +32,7 @@ class InvoiceResponse
     /**
      * @return string
      */
-    public function getAmount(): string
+    public function getAmount()
     {
         return $this->amount;
     }

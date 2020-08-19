@@ -65,16 +65,16 @@ class MonitorCommand extends Command
                 else {
                     if (!is_null(config('blockchain-monitor.api_key'))) {
                         try {
-                            $gab = XpubRepository::getGabByXPub($value);
                             $xpub = $this->xpubRepository->getByAttribute('label', $value, [], true);
                             if ($xpub) {
+                                $gab = XpubRepository::getGabByXPub($value);
                                 if ($xpub->trashed())
                                     $xpub->restore();
                                 $result = $this->xpubRepository->update($xpub->id, ['gab' => $gab]);
                             } else
                                 $result = $this->xpubRepository->store([
                                     'label' => $value,
-                                    'gab' => $gab
+                                    'gab' => 0
                                 ]);
                             if ($result)
                                 $this->info('New Xpub set successfully !');

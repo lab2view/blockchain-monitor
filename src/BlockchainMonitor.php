@@ -11,13 +11,13 @@ use Lab2view\BlockchainMonitor\Repositories\XpubRepository;
 class BlockchainMonitor implements BlockchainMonitorInterface
 {
     /**
-     * @param string $btc_amount
+     * @param $btc_amount
      * @param string|null $custom_data
      * @return InvoiceResponse
      * @throws BlockchainException
      * @throws QueryException
      */
-    public function generateAddress(string $btc_amount, string $custom_data = null)
+    public function generateAddress($btc_amount, string $custom_data = null)
     {
         $xpub = XpubRepository::selectInRandomOrder();
         if ($xpub) {
