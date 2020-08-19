@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
  * @property int $confirmations
  * @property string $request_amount
  * @property string $response_amount
+ * @property string $reference
  * @property string $hash
  * @property string $state
  * @property \Carbon\Carbon $created_at
@@ -33,6 +34,7 @@ class Invoice extends Model
         'address_id',
         'request_amount',
         'response_amount',
+        'reference',
         'hash',
         'confirmations',
         'state'

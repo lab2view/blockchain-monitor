@@ -23,7 +23,7 @@ class AddressRepository extends BaseRepository
     {
         try {
             $query = Address::query()->where('xpub_id', $xpub_id)
-                ->where('is_active', true);
+                ->where('is_busy', false);
 
             if ($query->whereNull('amount')->exists())
                 $query = $query->whereNull('amount');
@@ -62,6 +62,16 @@ class AddressRepository extends BaseRepository
             return $address;
         else
             throw QueryException::storeAddressError();
+    }
+
+    /**
+     * @param $key
+     * @param $reference
+     * @return bool
+     */
+    public static function verifyCallbackKey($key, $reference)
+    {
+        return $key == sha1($reference);
     }
 
 }

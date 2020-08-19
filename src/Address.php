@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $callback
  * @property string $reference
  * @property string $amount
- * @property bool $is_active
+ * @property bool $is_busy
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
@@ -30,7 +30,7 @@ class Address extends Model
     protected $casts = [
         'xpub_id' => 'int',
         'index' => 'int',
-        'is_active' => 'bool'
+        'is_busy' => 'bool'
     ];
 
     protected $fillable = [
@@ -40,7 +40,7 @@ class Address extends Model
         'callback',
         'reference',
         'amount',
-        'is_active'
+        'is_busy'
     ];
 
     public function xpub()

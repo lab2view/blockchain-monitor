@@ -29,7 +29,7 @@ class CreateBlockchainTable extends Migration
             $table->string('callback');
             $table->string('reference', 24);
             $table->string('amount')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_busy')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
@@ -39,6 +39,7 @@ class CreateBlockchainTable extends Migration
         Schema::create('blockchain_invoices', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedInteger('address_id');
+            $table->string('reference', 24)->nullable();
             $table->string('request_amount', 16);
             $table->string('response_amount', 16)->nullable();
             $table->string('state', 10);

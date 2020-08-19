@@ -38,16 +38,11 @@ class AddressMonitorJob implements ShouldQueue
      */
     public function handle()
     {
-        try {
-            $this->invoice->refresh();
-            if (is_null($this->invoice->confirmations)) {
-                Log::info('START TRAITEMENT ! ');
-                $this->invoice->address()->update(['is_active' => true]);
+        $this->invoice->refresh();
+        if (is_null($this->invoice->confirmations)) {
+            $this->invoice->address()->update(['is_busy' => false]);
 
-                InvoiceRepository::cancelInvoice($this->invoice);
-            }
-        } catch (\Exception $e) {
-            Log::error('BLOCKCHAIN-MONITOR JOB ERROR ' . $e->getMessage());
+            InvoiceRepository::cancelInvoice($this->invoice);
         }
     }
 }
