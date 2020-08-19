@@ -34,6 +34,10 @@ class InvoiceCallback
      * @var bool
      */
     private $verify;
+    /**
+     * @var string
+     */
+    private $custom_data;
 
     /**
      * InvoiceCallback constructor.
@@ -48,6 +52,7 @@ class InvoiceCallback
         $this->receive_amount = $invoice->response_amount;
         $this->hash = $invoice->hash;
         $this->confirmations = $invoice->confirmations;
+        $this->custom_data = $invoice->custom_data;
         $this->verify = $verify;
     }
 
@@ -97,6 +102,14 @@ class InvoiceCallback
     public function getConfirmations(): int
     {
         return $this->confirmations;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCustomData()
+    {
+        return $this->custom_data;
     }
 
 }

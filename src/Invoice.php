@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
  * @property string $reference
  * @property string $hash
  * @property string $state
+ * @property string $custom_data
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
@@ -37,7 +38,8 @@ class Invoice extends Model
         'reference',
         'hash',
         'confirmations',
-        'state'
+        'state',
+        'custom_data'
     ];
 
     /**

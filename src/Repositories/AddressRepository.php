@@ -43,8 +43,7 @@ class AddressRepository extends BaseRepository
     public static function generate(\Lab2view\BlockchainMonitor\Xpub $xpub)
     {
         $reference = Str::lower(Str::random(16));
-//        $callback = route('blockchain.notify') . "?reference=" . $reference . "&key=" . sha1($reference);
-        $callback = "https://be-wallet.net/api/blockchain/payment/notify?reference=" . $reference . "&key=" . sha1($reference);
+        $callback = route('blockchain.notify') . "?reference=" . $reference . "&key=" . sha1($reference);
         try {
             $response = MonitorStatic::getReceiveInstance()->generate(MonitorStatic::getApiKey(),
                 $xpub->label, $callback, MonitorStatic::getGabLimit());

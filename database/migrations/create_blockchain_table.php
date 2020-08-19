@@ -45,6 +45,7 @@ class CreateBlockchainTable extends Migration
             $table->string('state', 10);
             $table->string('hash')->nullable();
             $table->unsignedInteger('confirmations')->nullable();
+            $table->text('custom_data')->nullable();
             $table->timestamps();
 
             $table->foreign('address_id')->references('id')->on('blockchain_addresses');

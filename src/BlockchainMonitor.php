@@ -12,24 +12,25 @@ class BlockchainMonitor implements BlockchainMonitorInterface
 {
     /**
      * @param string $btc_amount
+     * @param string|null $custom_data
      * @return InvoiceResponse
-     * @throws QueryException
      * @throws BlockchainException
+     * @throws QueryException
      */
-    public function generateAddress(string $btc_amount)
+    public function generateAddress(string $btc_amount, string $custom_data = null)
     {
         $xpub = XpubRepository::selectInRandomOrder();
         if ($xpub) {
             $address = AddressRepository::getRandomActiveAddressByXpub($xpub->id);
             if ($address)
-                return InvoiceRepository::makeInvoice($address, $btc_amount);
+                return InvoiceRepository::makeInvoice($address, $btc_amount, $custom_data);
             else {
                 if ($xpub->gab >= MonitorStatic::getGabLimit())
                     throw QueryException::xpubAllGabLimited();
                 else {
                     $address = AddressRepository::generate($xpub);
                     if ($address)
-                        return InvoiceRepository::makeInvoice($address, $btc_amount);
+                        return InvoiceRepository::makeInvoice($address, $btc_amount, $custom_data);
                 }
                 throw QueryException::storeAddressError();
             }
