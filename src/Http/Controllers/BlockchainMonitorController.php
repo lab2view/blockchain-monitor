@@ -56,7 +56,8 @@ class BlockchainMonitorController extends Controller
                 'confirmations' => $confirmations,
                 'hash' => $transaction_hash,
                 'response_amount' => $response_amount,
-                'state' => $state
+                'state' => $state,
+                'reference' => null
             ];
             if (is_null($invoice->hash))
                 $data['hash'] = $transaction_hash;
