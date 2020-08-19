@@ -91,6 +91,14 @@ class InvoiceCallback
     /**
      * @return string|null
      */
+    public function getReceiveAmountInSatoshi()
+    {
+        return !is_null($this->receive_amount) ? $this->receive_amount * 100000000 : null;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getHash()
     {
         return $this->hash;
