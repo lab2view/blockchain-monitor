@@ -50,7 +50,7 @@ class BlockchainMonitorController extends Controller
         try {
             $response_amount = InvoiceRepository::convertSatoshiAmountToBTC($value);
 
-            $state = $confirmations == config('blockchain-monitor.confirmations_level')
+            $state = $confirmations >= config('blockchain-monitor.confirmations_level')
                 ? InvoiceRepository::DONE : InvoiceRepository::WAITING;
             $invoice = $this->invoiceRepository->getByRefOrHash($reference, $transaction_hash);
             $data = [
