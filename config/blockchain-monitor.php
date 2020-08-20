@@ -29,6 +29,6 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'prefix' => 'blockchain-monitor',
+    'prefix' => 'api/blockchain-monitor',
     'middleware' => ['api'],
 ];

@@ -30,11 +30,11 @@ class InvoiceRepository extends BaseRepository
     /**
      * @param \Lab2view\BlockchainMonitor\Address $address
      * @param $btc_amount
-     * @param string $custom_data
+     * @param $custom_data
      * @return InvoiceResponse
      * @throws QueryException
      */
-    public static function makeInvoice(\Lab2view\BlockchainMonitor\Address $address, $btc_amount, string $custom_data)
+    public static function makeInvoice(\Lab2view\BlockchainMonitor\Address $address, $btc_amount, $custom_data)
     {
         try {
             $invoice = new Invoice(['address_id' => $address->id,

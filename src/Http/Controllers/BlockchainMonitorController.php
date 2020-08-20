@@ -52,33 +52,35 @@ class BlockchainMonitorController extends Controller
             $state = $confirmations >= config('blockchain-monitor.confirmations_level')
                 ? InvoiceRepository::DONE : InvoiceRepository::WAITING;
             $invoice = $this->invoiceRepository->getByRefOrHash($reference, $transaction_hash);
-            $data = [
-                'confirmations' => $confirmations,
-                'hash' => $transaction_hash,
-                'response_amount' => $response_amount,
-                'state' => $state,
-                'reference' => null
-            ];
-            if (is_null($invoice->hash))
-                $data['hash'] = $transaction_hash;
+            if ($invoice) {
+                $data = [
+                    'confirmations' => $confirmations,
+                    'hash' => $transaction_hash,
+                    'response_amount' => $response_amount,
+                    'state' => $state,
+                    'reference' => !is_null($transaction_hash) ? null : $transaction_hash
+                ];
 
-            $this->invoiceRepository->update($invoice->id, $data);
+                $this->invoiceRepository->update($invoice->id, $data);
 
-            if ($invoice->address->is_busy && $confirmations == 0) {
-                $this->addressRepository->update($invoice->address->id, [
-                    'is_busy' => false,
-                    'amount' => is_null($invoice->address->amount) ? $response_amount
-                        : bcadd($invoice->address->amount, $response_amount)
-                ]);
-            }
+                if ($invoice->address->is_busy && $confirmations == 0) {
+                    $this->addressRepository->update($invoice->address->id, [
+                        'is_busy' => false,
+                        'amount' => is_null($invoice->address->amount) ? $response_amount
+                            : bcadd($invoice->address->amount, $response_amount)
+                    ]);
+                }
 
-            if (!AddressRepository::verifyCallbackKey($key, $reference))
-                event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh(), false)));
-            else
-                event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh())));
+                if (!AddressRepository::verifyCallbackKey($key, $reference))
+                    event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh(), false)));
+                else
+                    event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh())));
 
-            if ($state == InvoiceRepository::DONE) {
-                echo '*ok*';
+                if ($state == InvoiceRepository::DONE) {
+                    return '*ok*';
+                }
+            } else {
+                Log::alert('BLOCKCHAIN-MONITOR CALLBACK INVOICE NOT FOUND ! ', $request->all());
                 return '*ok*';
             }
         } catch (BlockchainException $e) {
