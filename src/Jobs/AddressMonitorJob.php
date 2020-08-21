@@ -9,7 +9,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Lab2view\BlockchainMonitor\Events\InvoiceCallbackEvent;
 use Lab2view\BlockchainMonitor\Invoice;
+use Lab2view\BlockchainMonitor\InvoiceCallback;
 use Lab2view\BlockchainMonitor\Repositories\InvoiceRepository;
 
 class AddressMonitorJob implements ShouldQueue
@@ -43,6 +45,8 @@ class AddressMonitorJob implements ShouldQueue
             $this->invoice->address()->update(['is_busy' => false]);
 
             InvoiceRepository::cancelInvoice($this->invoice);
+
+            event(new InvoiceCallbackEvent(new InvoiceCallback($this->invoice->fresh())));
         }
     }
 }
