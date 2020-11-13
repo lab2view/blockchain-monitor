@@ -38,6 +38,10 @@ class BlockchainMonitor implements BlockchainMonitorInterface
             throw QueryException::xpubNotFound();
     }
 
+    public function sendBTC($btc_amount, string $address) {
+
+    }
+
     /**
      * @param $invoice_id
      * @return InvoiceCallback

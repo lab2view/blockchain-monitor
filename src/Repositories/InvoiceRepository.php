@@ -2,6 +2,8 @@
 
 namespace Lab2view\BlockchainMonitor\Repositories;
 
+use Blockchain\Exception\Error;
+use Blockchain\Exception\HttpError;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -61,7 +63,13 @@ class InvoiceRepository extends BaseRepository
     public static function cancelInvoice(Invoice $invoice)
     {
         $invoice->update(['state' => InvoiceRepository::CANCEL, 'reference' => null]);
-        XpubRepository::refreshGab($invoice->address->xpub);
+        try {
+            XpubRepository::refreshGab($invoice->address->xpub);
+        } catch (\Exception $e) {
+            Log::critical('BLOCKCHAIN-MONITOR REFRESH GAB EXCEPTION ('
+                . $e->getMessage() . ' FILE: ' . $e->getFile()
+                . ' LINE: ' . $e->getLine() . ')');
+        }
     }
 
     /**

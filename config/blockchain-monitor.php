@@ -20,7 +20,7 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'confirmations_level' => 0,
+    'confirmations_level' => 3,
     'cancel_invoice_delay' => 5, //Delay is in minute
 
     /*

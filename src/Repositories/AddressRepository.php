@@ -2,6 +2,8 @@
 
 namespace Lab2view\BlockchainMonitor\Repositories;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Lab2view\BlockchainMonitor\Address;
@@ -77,6 +79,10 @@ class AddressRepository extends BaseRepository
         return $key == sha1($reference);
     }
 
+    /**
+     * @param array $parts
+     * @return string
+     */
     private static function build_url(array $parts)
     {
         $scheme = isset($parts['scheme']) ? ($parts['scheme'] . '://') : '';
@@ -95,5 +101,17 @@ class AddressRepository extends BaseRepository
         $fragment = empty($parts['fragment']) ? '' : ('#' . $parts['fragment']);
 
         return implode('', [$scheme, $user, $pass, $host, $port, $path, $query, $fragment]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function flushBusyInDelay()
+    {
+        $cancelDelay = Config::get('blockchain-monitor.cancel_invoice_delay', 5);
+        return $this->model
+            ->where('is_busy', true)
+            ->where('created_at', '>', Carbon::now()->subMinutes($cancelDelay))
+            ->update(['is_busy', false]);
     }
 }

@@ -87,6 +87,19 @@ class MonitorCommand extends Command
                         $this->error('Please specify the BLOCKCHAIN_API_KEY in your .env');
                 }
                 break;
+            case "flush_busy":
+                try {
+                    if ($this->addressRepository->flushBusyInDelay())
+                        $this->info('Busy addresses have been free successfully');
+                    else
+                        $this->warn('Warning : Busy addresses have not been free. Verify logs');
+                } catch (\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                break;
+            default:
+                $this->warn('Please specify the action');
+                break;
         }
     }
 }

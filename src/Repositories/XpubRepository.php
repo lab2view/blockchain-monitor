@@ -39,6 +39,11 @@ class XpubRepository extends BaseRepository
         }
     }
 
+    /**
+     * @param Xpub $xpub
+     * @throws \Blockchain\Exception\Error
+     * @throws \Blockchain\Exception\HttpError
+     */
     public static function refreshGab(Xpub $xpub) {
         $xpub->update(['gab' => XpubRepository::getGabByXPub($xpub->label)]);
     }
