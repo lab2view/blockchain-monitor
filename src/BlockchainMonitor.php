@@ -52,6 +52,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
             $invoice = InvoiceRepository::getInvoiceCallbackById($invoice_id);
             if ($invoice)
                 return new InvoiceCallback($invoice);
+            throw QueryException::queryException('Invoice not found');
         } catch (QueryException $e) {
             throw QueryException::queryException($e->getMessage());
         }
