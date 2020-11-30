@@ -64,4 +64,12 @@ class MonitorStatic
         $blockchain->Wallet->credentials(MonitorStatic::getWalletId(), Config::get('blockchain-monitor.wallet_id'));
         return $blockchain->Wallet;
     }
+
+    /**
+     * @return \Blockchain\Rates\Rates
+     */
+    public static function getRatesInstance() {
+        $blockchain = MonitorStatic::getBlockchainInstance();
+        return $blockchain->Rates;
+    }
 }

@@ -57,4 +57,24 @@ class BlockchainMonitor implements BlockchainMonitorInterface
             throw QueryException::queryException($e->getMessage());
         }
     }
+
+    /**
+     * @param $amount
+     * @param string $symbol
+     * @return mixed
+     */
+    public function convertFromBTC($amount, $symbol = 'USB')
+    {
+        return MonitorStatic::getRatesInstance()->fromBTC($amount, $symbol);
+    }
+
+    /**
+     * @param $amount
+     * @param string $symbol
+     * @return mixed
+     */
+    public function convertToBTC($amount, $symbol = 'USB')
+    {
+        return MonitorStatic::getRatesInstance()->toBTC($amount, $symbol);
+    }
 }
