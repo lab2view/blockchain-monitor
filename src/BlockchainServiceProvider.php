@@ -50,6 +50,8 @@ class BlockchainServiceProvider extends ServiceProvider
                 $this->publishes([
                     __DIR__ . '/../database/migrations/create_blockchain_table.php'
                     => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_blockchain_table.php'),
+                    __DIR__ . '/../database/migrations/create_blockchain_callback_table.php'
+                    => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_blockchain_callback_table.php'),
                 ], 'migrations');
             }
 

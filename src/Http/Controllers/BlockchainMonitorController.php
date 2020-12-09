@@ -8,6 +8,7 @@ use Lab2view\BlockchainMonitor\Events\InvoiceCallbackEvent;
 use Lab2view\BlockchainMonitor\Exceptions\BlockchainException;
 use Lab2view\BlockchainMonitor\InvoiceCallback;
 use Lab2view\BlockchainMonitor\Repositories\AddressRepository;
+use Lab2view\BlockchainMonitor\Repositories\CallbackRepository;
 use Lab2view\BlockchainMonitor\Repositories\InvoiceRepository;
 
 class BlockchainMonitorController extends Controller
@@ -20,19 +21,26 @@ class BlockchainMonitorController extends Controller
      * @var InvoiceRepository
      */
     private $invoiceRepository;
+    /**
+     * @var CallbackRepository
+     */
+    private $callbackRepository;
 
     /**
      * BlockchainMonitorController constructor.
      * @param AddressRepository $addressRepository
      * @param InvoiceRepository $invoiceRepository
+     * @param CallbackRepository $callbackRepository
      */
     public function __construct(
         AddressRepository $addressRepository,
-        InvoiceRepository $invoiceRepository
+        InvoiceRepository $invoiceRepository,
+        CallbackRepository $callbackRepository
     )
     {
         $this->addressRepository = $addressRepository;
         $this->invoiceRepository = $invoiceRepository;
+        $this->callbackRepository = $callbackRepository;
     }
 
     /**
@@ -75,12 +83,12 @@ class BlockchainMonitorController extends Controller
                     event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh(), false)));
                 else
                     event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh())));
-
-                if ($state == InvoiceRepository::DONE) {
-                    return '*ok*';
-                }
             } else {
-                Log::alert('BLOCKCHAIN-MONITOR CALLBACK INVOICE NOT FOUND ! ', $request->all());
+                $callback = $this->callbackRepository->storeOrUpdate($transaction_hash, $request->all());
+                if (!$callback)
+                    Log::alert('BLOCKCHAIN-MONITOR CALLBACK INVOICE NOT FOUND ! ', $request->all());
+            }
+            if ($state == InvoiceRepository::DONE) {
                 return '*ok*';
             }
         } catch (BlockchainException $e) {

@@ -63,7 +63,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
      * @param string $symbol
      * @return mixed
      */
-    public function convertFromBTC($amount, $symbol = 'USB')
+    public function convertFromBTC($amount, $symbol = 'USD')
     {
         return MonitorStatic::getRatesInstance()->fromBTC($amount, $symbol);
     }
@@ -73,7 +73,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
      * @param string $symbol
      * @return mixed
      */
-    public function convertToBTC($amount, $symbol = 'USB')
+    public function convertToBTC($amount, $symbol = 'USD')
     {
         return MonitorStatic::getRatesInstance()->toBTC($amount, $symbol);
     }
