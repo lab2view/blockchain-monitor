@@ -15,6 +15,22 @@ class CallbackRepository extends BaseRepository
     }
 
     /**
+     * @param $hash
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|Callback|object|null
+     */
+    public static function getByHash($hash)
+    {
+        try {
+            return Callback::query()->where('transaction_hash', $hash)->first();
+        } catch (\Exception $exc) {
+            Log::critical('BLOCKCHAIN-MONITOR GET HASH CALLBACK EXCEPTION ('
+                . $exc->getMessage() . ' FILE: ' . $exc->getFile()
+                . ' LINE: ' . $exc->getLine() . ')', ['hash' => $hash]);
+            return null;
+        }
+    }
+
+    /**
      * @param string $transaction_hash
      * @param array $data
      * @return Callback|null

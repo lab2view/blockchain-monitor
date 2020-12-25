@@ -5,6 +5,7 @@ namespace Lab2view\BlockchainMonitor;
 use Lab2view\BlockchainMonitor\Exceptions\QueryException;
 use Lab2view\BlockchainMonitor\Exceptions\BlockchainException;
 use Lab2view\BlockchainMonitor\Repositories\AddressRepository;
+use Lab2view\BlockchainMonitor\Repositories\CallbackRepository;
 use Lab2view\BlockchainMonitor\Repositories\InvoiceRepository;
 use Lab2view\BlockchainMonitor\Repositories\XpubRepository;
 
@@ -38,7 +39,8 @@ class BlockchainMonitor implements BlockchainMonitorInterface
             throw QueryException::xpubNotFound();
     }
 
-    public function sendBTC($btc_amount, string $address) {
+    public function sendBTC($btc_amount, string $address)
+    {
 
     }
 
@@ -47,11 +49,52 @@ class BlockchainMonitor implements BlockchainMonitorInterface
      * @return InvoiceCallback
      * @throws QueryException
      */
-    public function getInvoice($invoice_id) {
+    public function getInvoice($invoice_id)
+    {
         try {
             $invoice = InvoiceRepository::getInvoiceCallbackById($invoice_id);
             if ($invoice)
                 return new InvoiceCallback($invoice);
+            throw QueryException::queryException('Invoice not found');
+        } catch (QueryException $e) {
+            throw QueryException::queryException($e->getMessage());
+        }
+    }
+
+    /**
+     * @param $invoice_id
+     * @param $hash
+     * @return InvoiceCallback
+     * @throws QueryException
+     * +
+     */
+    public function verifyInvoiceByHash($invoice_id, $hash)
+    {
+        try {
+            $invoice = InvoiceRepository::getInvoiceCallbackById($invoice_id);
+            if ($invoice) {
+                if ($invoice->state != InvoiceRepository::DONE) {
+                    $invoiceCallback = CallbackRepository::getByHash($hash);
+                    if ($invoiceCallback) {
+                        $data = [
+                            'hash' => $invoiceCallback->transaction_hash,
+                            'confirmations' => $invoiceCallback->confirmations,
+                            'response_amount' => InvoiceRepository::convertSatoshiAmountToBTC($invoiceCallback->value),
+                            'state' => $invoiceCallback->confirmations >= config('blockchain-monitor.confirmations_level')
+                                ? InvoiceRepository::DONE : InvoiceRepository::WAITING
+                        ];
+                        if ($invoice->update($data)) {
+                            try {
+                                $invoiceCallback->delete();
+                                return new InvoiceCallback($invoice->refresh());
+                            } catch (\Exception $e) {
+                                throw QueryException::queryException($e->getMessage());
+                            }
+                        }
+                    }
+                } else
+                    return new InvoiceCallback($invoice);
+            }
             throw QueryException::queryException('Invoice not found');
         } catch (QueryException $e) {
             throw QueryException::queryException($e->getMessage());

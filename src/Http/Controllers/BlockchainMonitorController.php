@@ -84,9 +84,11 @@ class BlockchainMonitorController extends Controller
                 else
                     event(new InvoiceCallbackEvent(new InvoiceCallback($invoice->fresh())));
             } else {
-                $callback = $this->callbackRepository->storeOrUpdate($transaction_hash, $request->all());
-                if (!$callback)
-                    Log::alert('BLOCKCHAIN-MONITOR CALLBACK INVOICE NOT FOUND ! ', $request->all());
+                if ($transaction_hash) {
+                    $callback = $this->callbackRepository->storeOrUpdate($transaction_hash, $request->all());
+                    if (!$callback)
+                        Log::alert('BLOCKCHAIN-MONITOR CALLBACK INVOICE NOT FOUND ! ', $request->all());
+                }
             }
             if ($state == InvoiceRepository::DONE) {
                 return '*ok*';

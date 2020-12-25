@@ -22,12 +22,19 @@ interface BlockchainMonitorInterface {
      * @param string $symbol
      * @return mixed
      */
-    public function convertToBTC($amount, $symbol = 'USB');
+    public function convertToBTC($amount, $symbol = 'USD');
 
     /**
      * @param $amount
      * @param string $symbol
      * @return mixed
      */
-    public function convertFromBTC($amount, $symbol = 'USB');
+    public function convertFromBTC($amount, $symbol = 'USD');
+
+    /**
+     * @param $invoice_id
+     * @param $hash
+     * @return mixed
+     */
+    public function verifyInvoiceByHash($invoice_id, $hash);
 }

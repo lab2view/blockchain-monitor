@@ -7,8 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Lab2view\BlockchainMonitor\Events\InvoiceCallbackEvent;
 use Lab2view\BlockchainMonitor\Invoice;
 use Lab2view\BlockchainMonitor\InvoiceCallback;
