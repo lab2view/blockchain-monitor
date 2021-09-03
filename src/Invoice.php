@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
  * @property string $custom_data
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property Address address
  *
  * @package Lab2view\BlockchainMonitor
  */
@@ -68,7 +69,7 @@ class Invoice extends Model
      *
      * @return bool
      */
-    public function getIncrementing()
+    public function getIncrementing(): bool
     {
         return false;
     }
@@ -78,13 +79,13 @@ class Invoice extends Model
      *
      * @return string
      */
-    public function getKeyType()
+    public function getKeyType(): string
     {
         return 'string';
     }
 
-    public function address()
+    public function address(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\Lab2view\BlockchainMonitor\Address::class, 'address_id');
+        return $this->belongsTo(Address::class, 'address_id');
     }
 }

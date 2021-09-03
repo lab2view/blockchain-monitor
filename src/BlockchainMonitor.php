@@ -2,6 +2,7 @@
 
 namespace Lab2view\BlockchainMonitor;
 
+use Blockchain\Exception\ParameterError;
 use Lab2view\BlockchainMonitor\Exceptions\QueryException;
 use Lab2view\BlockchainMonitor\Exceptions\BlockchainException;
 use Lab2view\BlockchainMonitor\Repositories\AddressRepository;
@@ -12,26 +13,26 @@ use Lab2view\BlockchainMonitor\Repositories\XpubRepository;
 class BlockchainMonitor implements BlockchainMonitorInterface
 {
     /**
-     * @param $btc_amount
+     * @param $amount
      * @param string|null $custom_data
      * @return InvoiceResponse
      * @throws BlockchainException
      * @throws QueryException
      */
-    public function generateAddress($btc_amount, string $custom_data = null)
+    public function generateAddress($amount, string $custom_data = null): InvoiceResponse
     {
         $xpub = XpubRepository::selectInRandomOrder();
         if ($xpub) {
             $address = AddressRepository::getRandomActiveAddressByXpub($xpub->id);
             if ($address)
-                return InvoiceRepository::makeInvoice($address, $btc_amount, $custom_data);
+                return InvoiceRepository::makeInvoice($address, $amount, $custom_data);
             else {
                 if ($xpub->gab >= MonitorStatic::getGabLimit())
                     throw QueryException::xpubAllGabLimited();
                 else {
                     $address = AddressRepository::generate($xpub);
                     if ($address)
-                        return InvoiceRepository::makeInvoice($address, $btc_amount, $custom_data);
+                        return InvoiceRepository::makeInvoice($address, $amount, $custom_data);
                 }
                 throw QueryException::storeAddressError();
             }
@@ -39,9 +40,12 @@ class BlockchainMonitor implements BlockchainMonitorInterface
             throw QueryException::xpubNotFound();
     }
 
-    public function sendBTC($btc_amount, string $address)
+    /**
+     * @throws ParameterError
+     */
+    public function sendBTC($amount, string $address): \Blockchain\Wallet\PaymentResponse
     {
-
+        return MonitorStatic::getWalletInstance()->send($address, $amount);
     }
 
     /**
@@ -49,7 +53,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
      * @return InvoiceCallback
      * @throws QueryException
      */
-    public function getInvoice($invoice_id)
+    public function getInvoice($invoice_id): InvoiceCallback
     {
         try {
             $invoice = InvoiceRepository::getInvoiceCallbackById($invoice_id);
@@ -68,7 +72,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
      * @throws QueryException
      * +
      */
-    public function verifyInvoiceByHash($invoice_id, $hash)
+    public function verifyInvoiceByHash($invoice_id, $hash): InvoiceCallback
     {
         try {
             $invoice = InvoiceRepository::getInvoiceCallbackById($invoice_id);
@@ -92,8 +96,8 @@ class BlockchainMonitor implements BlockchainMonitorInterface
                             }
                         }
                     }
-                } else
-                    return new InvoiceCallback($invoice);
+                }
+                return new InvoiceCallback(InvoiceRepository::verifyInvoiceTransaction($invoice, $hash));
             }
             throw QueryException::queryException('Invoice not found');
         } catch (QueryException $e) {
@@ -106,7 +110,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
      * @param string $symbol
      * @return mixed
      */
-    public function convertFromBTC($amount, $symbol = 'USD')
+    public function convertFromBTC($amount, string $symbol = 'USD')
     {
         return MonitorStatic::getRatesInstance()->fromBTC($amount, $symbol);
     }
@@ -116,7 +120,7 @@ class BlockchainMonitor implements BlockchainMonitorInterface
      * @param string $symbol
      * @return mixed
      */
-    public function convertToBTC($amount, $symbol = 'USD')
+    public function convertToBTC($amount, string $symbol = 'USD')
     {
         return MonitorStatic::getRatesInstance()->toBTC($amount, $symbol);
     }

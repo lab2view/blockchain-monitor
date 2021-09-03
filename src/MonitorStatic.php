@@ -3,8 +3,11 @@
 namespace Lab2view\BlockchainMonitor;
 
 use Blockchain\Blockchain;
+use Blockchain\Explorer\Explorer;
+use Blockchain\Rates\Rates;
+use Blockchain\V2\Receive\Receive;
+use Blockchain\Wallet\Wallet;
 use Illuminate\Support\Facades\Config;
-use Lab2view\BlockchainMonitor\Exceptions\BlockchainException;
 
 class MonitorStatic
 {
@@ -40,15 +43,15 @@ class MonitorStatic
         return Config::get('blockchain-monitor.gap_limit', null);
     }
 
-    public static function getBlockchainInstance()
+    public static function getBlockchainInstance(): Blockchain
     {
         return new Blockchain(config('blockchain-monitor.api_key'));
     }
 
     /**
-     * @return \Blockchain\V2\Receive\Receive
+     * @return Receive
      */
-    public static function getReceiveInstance()
+    public static function getReceiveInstance(): Receive
     {
         $blockchain = MonitorStatic::getBlockchainInstance();
         $blockchain->Wallet->credentials(MonitorStatic::getWalletId(), Config::get('blockchain-monitor.wallet_id'));
@@ -56,9 +59,9 @@ class MonitorStatic
     }
 
     /**
-     * @return \Blockchain\Wallet\Wallet
+     * @return Wallet
      */
-    public static function getWalletInstance()
+    public static function getWalletInstance(): Wallet
     {
         $blockchain = MonitorStatic::getBlockchainInstance();
         $blockchain->Wallet->credentials(MonitorStatic::getWalletId(), Config::get('blockchain-monitor.wallet_id'));
@@ -66,10 +69,20 @@ class MonitorStatic
     }
 
     /**
-     * @return \Blockchain\Rates\Rates
+     * @return Rates
      */
-    public static function getRatesInstance() {
+    public static function getRatesInstance(): Rates
+    {
         $blockchain = MonitorStatic::getBlockchainInstance();
         return $blockchain->Rates;
+    }
+
+    /**
+     * @return Explorer
+     */
+    public static function getExplorerInstance(): Explorer
+    {
+        $blockchain = MonitorStatic::getBlockchainInstance();
+        return $blockchain->Explorer;
     }
 }

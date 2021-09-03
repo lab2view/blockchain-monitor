@@ -47,7 +47,7 @@ class BlockchainMonitorController extends Controller
      * @param Request $request
      * @return string
      */
-    public function callback(Request $request)
+    public function callback(Request $request): string
     {
         $reference = $request->input('reference');
         $key = $request->input('key');

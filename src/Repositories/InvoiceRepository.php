@@ -12,6 +12,7 @@ use Lab2view\BlockchainMonitor\Exceptions\QueryException;
 use Lab2view\BlockchainMonitor\Invoice;
 use Lab2view\BlockchainMonitor\InvoiceResponse;
 use Lab2view\BlockchainMonitor\Jobs\AddressMonitorJob;
+use Lab2view\BlockchainMonitor\MonitorStatic;
 use Lab2view\BlockchainMonitor\Xpub;
 
 class InvoiceRepository extends BaseRepository
@@ -89,10 +90,31 @@ class InvoiceRepository extends BaseRepository
     public static function getInvoiceCallbackById($invoice_id)
     {
         try {
-           return Invoice::query()->where('id', $invoice_id)->first();
+            return Invoice::query()->where('id', $invoice_id)->first();
         } catch (\Exception $exception) {
             throw QueryException::queryException($exception->getMessage());
         }
+    }
+
+    /**
+     * @param Invoice $invoice
+     * @param $hash
+     * @return Invoice|null
+     */
+    public static function verifyInvoiceTransaction(Invoice $invoice, $hash)
+    {
+        $transaction = MonitorStatic::getExplorerInstance()->getTransaction($hash);
+        if ($transaction->double_spend)
+            $invoice->update(['state' => InvoiceRepository::CANCEL]);
+        else {
+            if (
+                isset($transaction->outputs[0]) && $transaction->outputs[0]->spent
+                && isset($transaction->outputs[1]) && $transaction->outputs[1]->spent
+            )
+                $invoice->update(['state' => InvoiceRepository::DONE]);
+        }
+
+        return $invoice->fresh();
     }
 
     /**
