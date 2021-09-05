@@ -45,7 +45,7 @@ class MonitorStatic
 
     public static function getBlockchainInstance(): Blockchain
     {
-        return new Blockchain(config('blockchain-monitor.api_key'));
+        return new Blockchain(Config::get('blockchain-monitor.api_key'));
     }
 
     /**
@@ -54,6 +54,7 @@ class MonitorStatic
     public static function getReceiveInstance(): Receive
     {
         $blockchain = MonitorStatic::getBlockchainInstance();
+        $blockchain->setServiceUrl(Config::get('blockchain-monitor.local_blockchain_server'));
         $blockchain->Wallet->credentials(MonitorStatic::getWalletId(), Config::get('blockchain-monitor.wallet_id'));
         return $blockchain->ReceiveV2;
     }
@@ -64,6 +65,7 @@ class MonitorStatic
     public static function getWalletInstance(): Wallet
     {
         $blockchain = MonitorStatic::getBlockchainInstance();
+        $blockchain->setServiceUrl(Config::get('blockchain-monitor.local_blockchain_server'));
         $blockchain->Wallet->credentials(MonitorStatic::getWalletId(), Config::get('blockchain-monitor.wallet_id'));
         return $blockchain->Wallet;
     }
