@@ -106,12 +106,12 @@ class AddressRepository extends BaseRepository
     /**
      * @return bool
      */
-    public function flushBusyInDelay()
+    public function flushBusyInDelay(): bool
     {
         $cancelDelay = Config::get('blockchain-monitor.cancel_invoice_delay', 5);
         return $this->model
             ->where('is_busy', true)
-            ->where('created_at', '>', Carbon::now()->subMinutes($cancelDelay))
-            ->update(['is_busy', false]);
+            ->where('created_at', '<', Carbon::now()->subMinutes($cancelDelay))
+            ->update(['is_busy' => false]);
     }
 }

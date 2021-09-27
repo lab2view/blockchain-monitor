@@ -56,7 +56,11 @@ class MonitorCommand extends Command
         $this->executeCommand($this->argument('action'), $this->argument('value'));
     }
 
-    private function executeCommand(?string $action, ?string $value)
+    /**
+     * @param string $action
+     * @param string $value
+     */
+    private function executeCommand(string $action, string $value)
     {
         switch (mb_strtolower($action)) {
             case 'add_xpub':
