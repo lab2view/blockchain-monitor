@@ -4,6 +4,7 @@ namespace Lab2view\BlockchainMonitor\Repositories;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Lab2view\BlockchainMonitor\Address;
 use Lab2view\BlockchainMonitor\Exceptions\BlockchainException;
@@ -25,12 +26,15 @@ class AddressRepository extends BaseRepository
     {
         try {
             $query = Address::query()->where('is_busy', false);
-
-            if ($query->clone()->whereNull('amount')->exists())
+            if ($query->whereNull('amount')->exists())
                 $query = $query->whereNull('amount');
-
             return $query->inRandomOrder()->first();
         } catch (\Exception $e) {
+            Log::alert('==================GET RANDOM ACTIVE ADDRESS EXCEPTION', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
             return null;
         }
     }
