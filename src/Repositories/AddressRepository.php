@@ -4,7 +4,6 @@ namespace Lab2view\BlockchainMonitor\Repositories;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Lab2view\BlockchainMonitor\Address;
 use Lab2view\BlockchainMonitor\Exceptions\BlockchainException;
@@ -22,13 +21,12 @@ class AddressRepository extends BaseRepository
      * @param int $xpub_id
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Address
      */
-    public static function getRandomActiveAddressByXpub(int $xpub_id)
+    public static function getRandomActiveAddress()
     {
         try {
-            $query = Address::query()->where('xpub_id', $xpub_id)
-                ->where('is_busy', false);
+            $query = Address::query()->where('is_busy', false);
 
-            if ($query->whereNull('amount')->exists())
+            if ($query->clone()->whereNull('amount')->exists())
                 $query = $query->whereNull('amount');
 
             return $query->inRandomOrder()->first();
