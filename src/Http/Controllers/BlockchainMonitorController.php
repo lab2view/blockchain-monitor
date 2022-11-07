@@ -48,6 +48,7 @@ class BlockchainMonitorController extends Controller
      */
     public function callback(Request $request)
     {
+        Log::alert('BLOCKCHAIN MONITOR CALLBACK', $request->all());
         $reference = $request->input('reference');
         $key = $request->input('key');
         $transaction_hash = $request->input('transaction_hash');
